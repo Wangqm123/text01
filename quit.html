@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>半山客·侨乡心语 | 轻问答</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f3f7f0 0%, #eef3e9 100%);
+      font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans', 'Roboto', 'Microsoft YaHei', sans-serif;
+      padding: 20px 16px 48px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* 主卡片 */
+    .quiz-container {
+      max-width: 580px;
+      width: 100%;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border-radius: 44px;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.03);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    /* 头部文化氛围 */
+    .hero {
+      background: #2f5e3c;
+      padding: 28px 24px 24px;
+      color: white;
+      text-align: center;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .hero h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .hero h1 span {
+      background: #f3b33d;
+      font-size: 0.9rem;
+      padding: 4px 12px;
+      border-radius: 40px;
+      color: #2e4a2c;
+      font-weight: 600;
+    }
+    .hero p {
+      font-size: 0.85rem;
+      margin-top: 10px;
+      opacity: 0.85;
+    }
+    .badge-set {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      background: rgba(255,255,240,0.2);
+      backdrop-filter: blur(4px);
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    /* 内容主体 */
+    .quiz-body {
+      padding: 24px 24px 32px;
+    }
+
+    /* 进度指示 */
+    .step-progress {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      background: #f0f3ef;
+      padding: 8px 12px;
+      border-radius: 60px;
+    }
+    .step {
+      flex: 1;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #8ba088;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .step.active {
+      color: #2f5e3c;
+      font-weight: 700;
+    }
+    .step.active::after {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      background: #f3b33d;
+      border-radius: 10px;
+      margin: 6px auto 0;
+    }
+    .step-done {
+      color: #2f5e3c;
+    }
+
+    /* 题目样式 */
+    .question-card {
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 6px 0 8px;
+    }
+    .question-text {
+      font-size: 1.28rem;
+      font-weight: 620;
+      line-height: 1.45;
+      margin-bottom: 28px;
+      color: #1a3622;
+      padding: 0 6px;
+    }
+    .options-area {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .quiz-option {
+      background: #f9fbf8;
+      border: 1.5px solid #e2e7de;
+      border-radius: 60px;
+      padding: 14px 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #2c4432;
+    }
+    .quiz-option:hover {
+      background: #f2f7ef;
+      border-color: #bdd3b0;
+      transform: translateX(2px);
+    }
+    .quiz-option.selected {
+      background: #2f5e3c;
+      border-color: #2f5e3c;
+      color: white;
+      box-shadow: 0 5px 12px rgba(47,94,60,0.25);
+    }
+
+    /* 判断题单独行样式 */
+    .judge-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+    .judge-opt {
+      flex: 1;
+      text-align: center;
+      background: #f9fbf8;
+      border: 1.5px solid #e2e7de;
+      border-radius: 60px;
+      padding: 14px 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .judge-opt.selected {
+      background: #2f5e3c;
+      border-color: #2f5e3c;
+      color: white;
+    }
+
+    textarea {
+      width: 100%;
+      border-radius: 28px;
+      border: 1.5px solid #e2e7de;
+      padding: 16px 18px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: #fefefc;
+      resize: vertical;
+      margin-bottom: 24px;
+      transition: 0.2s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #f3b33d;
+      box-shadow: 0 0 0 3px rgba(243,179,61,0.2);
+    }
+
+    button {
+      width: 100%;
+      background: #2f5e3c;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    button:active {
+      transform: scale(0.97);
+    }
+    button:disabled {
+      background: #bfcfb5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-outline {
+      background: #fff3e0;
+      color: #2f5e3c;
+      border: 1.5px solid #e4cf9a;
+      margin-top: 16px;
+    }
+
+    /* 结果区域 */
+    .result-box {
+      background: #fefcf5;
+      border-radius: 32px;
+      padding: 20px;
+      margin-top: 8px;
+    }
+    .score-circle {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .score-number {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #2f5e3c;
+      background: #eef4e9;
+      display: inline-block;
+      padding: 8px 32px;
+      border-radius: 80px;
+    }
+    .feedback-item {
+      padding: 16px 18px;
+      border-radius: 28px;
+      margin-bottom: 16px;
+      background: white;
+      border-left: 6px solid;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .correct-feedback {
+      border-left-color: #4caf7f;
+      background: #f3faf5;
+    }
+    .wrong-feedback {
+      border-left-color: #e28b6f;
+      background: #fff7f5;
+    }
+    .reflection {
+      background: #fff9ed;
+      border-left-color: #f3b33d;
+    }
+    .subjective-answer {
+      background: #fef9e6;
+      margin-top: 12px;
+      border-radius: 20px;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+    }
+
+    hr {
+      margin: 12px 0;
+      border: none;
+      height: 1px;
+      background: #e5ede0;
+    }
+
+    .hidden-step {
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #9bb893;
+      margin-top: 20px;
+      padding-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+<div class="quiz-container">
+  <div class="hero">
+    <h1>🌾 潮蕴客声 <span>半山客 · 侨乡心</span></h1>
+    <p>客家·潮汕·华侨 ｜ 融合与开拓</p>
+    <div class="badge-set">
+      <div class="pill">🏮 三山国王信仰</div>
+      <div class="pill">🍵 擂茶·工夫茶</div>
+      <div class="pill">🧭 下南洋情怀</div>
+    </div>
+  </div>
+
+  <div class="quiz-body" id="quizApp">
+    <!-- 进度标识 -->
+    <div class="step-progress" id="progressBar">
+      <div class="step" data-step="1">选择·史脉</div>
+      <div class="step" data-step="2">判断·思辨</div>
+      <div class="step" data-step="3">主观·青年说</div>
+    </div>
+
+    <!-- 选择题面板 -->
+    <div id="stepChoicePanel">
+      <div class="question-card">
+        <div class="question-text" id="choiceQuestionText"></div>
+        <div class="options-area" id="choiceOptionsArea"></div>
+        <button id="nextToJudgeBtn">✨ 下一题 · 文化思辨</button>
+      </div>
+    </div>
+
+    <!-- 判断题面板 -->
+    <div id="stepJudgePanel" class="hidden-step">
+      <div class="question-card">
+        <div class="question-text" id="judgeQuestionText"></div>
+        <div class="judge-group" id="judgeOptionsArea">
+          <div class="judge-opt" data-value="正确">✅ 正确</div>
+          <div class="judge-opt" data-value="错误">❌ 错误</div>
+        </div>
+        <button id="nextToSubjectiveBtn">📖 下一题 · 我来作答</button>
+      </div>
+    </div>
+
+    <!-- 主观题面板 -->
+    <div id="stepSubjectivePanel" class="hidden-step">
+      <div class="question-card">
+        <div class="question-text" id="subjectiveQuestionText"></div>
+        <textarea id="subjectiveAnswer" rows="4" placeholder="写写你的思考、感悟或见解…… 侨乡文化因青年而鲜活 🌱"></textarea>
+        <button id="submitQuizBtn">🍃 提交 · 查看回响</button>
+      </div>
+    </div>
+
+    <!-- 结果面板 -->
+    <div id="resultPanel" class="hidden-step">
+      <div class="result-box">
+        <div class="score-circle">
+          <div class="score-number" id="finalScoreSpan"></div>
+        </div>
+        <div id="resultDetails"></div>
+        <button id="retakeBtn" class="btn-outline">🔄 再答一组 · 半山客新知</button>
+      </div>
+      <footer>源自潮汕·客家侨乡真实史料 | 青年文化传承计划</footer>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ======================= 半山客题库（源自真实文档） =======================
+  // ---------- 1. 单选题库 15道 ----------
+  const SINGLE_CHOICE_POOL = [
+    { id:1, question:"潮汕“半山客”的核心定义是（）", options:["纯客家人","受潮汕文化浸润的客家群体","纯潮汕人","畲族人"], answer:"受潮汕文化浸润的客家群体" },
+    { id:2, question:"揭西县20个乡镇中，客家乡镇数量为（）", options:["10个","13个","15个","18个"], answer:"13个" },
+    { id:3, question:"半山客华侨移居海外的人口总数，约为潮汕原地半山客人口的（）", options:["1倍","2倍","3倍","4倍"], answer:"2倍" },
+    { id:4, question:"半山客先祖出洋、返乡的核心港口是（）", options:["广州港","汕头港","深圳港","湛江港"], answer:"汕头港" },
+    { id:5, question:"半山客祠堂、大型民居主要采用（）", options:["客家围屋","潮式建筑","四合院","西式建筑"], answer:"潮式建筑" },
+    { id:6, question:"海外半山客在泰国成立的同乡会馆是（）", options:["泰国半山客会馆","嘉应会馆","潮州会馆","广府会馆"], answer:"泰国半山客会馆" },
+    { id:7, question:"半山客标志性饮食，也是海外侨胞传承的特色美食是（）", options:["火锅","擂茶","早茶","海鲜"], answer:"擂茶" },
+    { id:8, question:"洋务运动实干家、丰顺半山客名人是（）", options:["丁日昌","陈南枝","蔡达三","曾毅"], answer:"丁日昌" },
+    { id:9, question:"半山客文化“潮化”的核心原因不包括（）", options:["行政辖属","经济交流","潮客通婚","强制同化"], answer:"强制同化" },
+    { id:10, question:"三山国王信仰的起源地是（）", options:["梅州","揭西河婆","汕头","潮州"], answer:"揭西河婆" },
+    { id:11, question:"潮汕地区无客家乡镇的两个县是（）", options:["澄海、南澳","揭西、普宁","潮安、饶平"], answer:"澄海、南澳" },
+    { id:12, question:"长期从事侨务工作、半山客侨务领域代表人物是（）", options:["彭光涵","杨之光","张宏达","詹安泰"], answer:"彭光涵" },
+    { id:13, question:"半山客华侨支持家乡建设的核心领域不包括（）", options:["捐资办学","修桥铺路","军事扩张","公益慈善"], answer:"军事扩张" },
+    { id:14, question:"1921年河婆客家人创办的专业潮剧团是（）", options:["玉楼","老三正顺","老玉梨香","老玉堂"], answer:"玉楼" },
+    { id:15, question:"半山客方言融入了大量（）词汇，形成独特语言特色", options:["普通话","潮汕话","粤语","畲语"], answer:"潮汕话" }
+  ];
+
+  // ---------- 2. 判断题 5道 ----------
+  const JUDGE_POOL = [
+    { id:26, question:"半山客已完全被潮汕文化同化，失去客家与华侨文化根脉。", answer:"错误" },
+    { id:27, question:"广东电台客家话播音使用梅县话，半山客话受其影响又融入潮语。", answer:"正确" },
+    { id:28, question:"半山客华侨在海外仅注重经商，不传承本土文化。", answer:"错误" },
+    { id:29, question:"三山国王信仰随半山客华侨传播到海外，成为侨胞精神纽带。", answer:"正确" },
+    { id:30, question:"半山客华侨捐资家乡公益，是家国情怀的重要体现。", answer:"正确" }
+  ];
+
+  // ---------- 3. 主观题 20道（含参考启发，保留完整文档精神）----------
+  const SUBJECTIVE_POOL = [
+    { id:31, question:"半山客华侨下南洋、闯海外，在异国他乡团结互助、成立会馆，这种抱团求生、守望相助的精神，对当代大学生应对竞争、团队协作有什么启示？", reference:"单打独斗难成大事，团结协作、彼此扶持才能走得更远；青年要学会共情互助，凝聚集体力量。" },
+    { id:32, question:"半山客华侨远离故土，却始终坚守擂茶、山歌、三山国王信仰等本土文化，文化根脉为何能跨越山海、代代相传？这对我们坚守文化自信有何启发？", reference:"文化是游子的精神家园；无论身在何处，守住文化根脉，才能找到身份认同与精神归属。" },
+    { id:33, question:"半山客华侨捐资办学、修桥铺路、支持家乡抗日与建设，这种家国情怀、反哺故土的精神，作为新时代大学生，我们该如何传承与践行？", reference:"心怀家国、不忘本源，将个人成长与家乡发展、国家需要结合，用学识与行动回馈社会。" },
+    { id:34, question:"半山客文化是客家+潮汕+华侨三重融合的产物，这种多元共生的文化形态，对我们理解“中华文化包容性”有什么新思考？", reference:"中华文化因包容而强大，不同文化碰撞融合，才能诞生更有生命力的新文明。" },
+    { id:35, question:"半山客华侨把潮剧、工夫茶、擂茶带到海外，让小众地域文化走向世界，作为青年学生，我们能如何助力本土文化跨洋传播？", reference:"用短视频、文创、海外社交平台等年轻方式，做本土文化的海外传播者。" },
+    { id:36, question:"从半山客华侨的奋斗史来看，迁徙与开拓是族群发展的动力，这对大学生突破舒适区、勇敢追梦有哪些借鉴？", reference:"勇于走出舒适区，保持开拓进取的精神，在挑战中实现自我成长。" },
+    { id:37, question:"海外半山客会馆既是互助平台，也是文化传承阵地，社会组织在文化传承与族群凝聚中起到关键作用，这对校园文化建设、社团发展有何启示？", reference:"社团/组织是文化传承的载体，要打造有温度、有内核的青年组织，凝聚共识、传承文化。" },
+    { id:38, question:"半山客华侨在海外既融入当地文化，又坚守客家与潮汕本色，文化适应与文化坚守如何平衡？结合自身留学/交流经历谈谈看法。", reference:"入乡随俗是包容，坚守本源是底气；兼容并蓄，才能在多元世界中站稳脚跟。" },
+    { id:39, question:"三山国王信仰成为半山客侨胞的精神纽带，跨越地域与国籍凝聚人心，你认为共同文化符号对民族团结、侨胞凝聚力有何价值？", reference:"共同的文化记忆与信仰，是打破隔阂、凝聚人心的核心力量，也是民族认同的基石。" },
+    { id:40, question:"半山客华侨中涌现出实业家、侨务工作者、教育家等人才，体现了自强不息、学以致用的侨乡精神，这对你的学业与职业规划有何激励？", reference:"以奋斗为底色，以实干显担当，把个人理想融入时代发展，做有作为的新时代青年。" },
+    { id:41, question:"榕江水路是半山客出洋、归乡、交流的生命线，地理环境塑造了侨乡文化，这对当下侨乡振兴、地域文化发展有什么借鉴意义？", reference:"依托地域特色资源，打通文化与经济交流渠道，以侨为桥，推动家乡高质量发展。" },
+    { id:42, question:"半山客华侨不忘根、不忘本，即便移居海外数代，仍心系家乡，这种乡土情结在快节奏的现代社会，还有没有保留的价值？", reference:"乡土情结是情感归宿，也是责任担当；无论走多远，不忘来时路，才能行稳致远。" },
+    { id:43, question:"半山客文化因华侨的传播，从粤东山区走向海外，成为世界认识潮汕、客家文化的窗口，小众地域文化如何实现国际化表达？", reference:"保留本土内核，用国际化的语言、形式包装，让小众文化被世界看见、理解、喜爱。" },
+    { id:44, question:"彭光涵、张伟超等半山客名人投身侨务工作，维护华侨权益、连接中外，侨务工作的时代价值是什么？大学生能为侨务文化宣传做些什么？", reference:"侨务工作是连接中外的桥梁；青年可通过调研、宣传，讲好侨胞故事，助力中外交流。" },
+    { id:45, question:"半山客华侨在海外传承婚俗、饮食、戏曲等民俗，传统民俗成为侨胞维系乡情的纽带，你如何看待民俗在海外华人文化认同中的作用？", reference:"民俗是活的文化，承载着族群记忆，是海外华人守住身份、联结乡情的重要载体。" },
+    { id:46, question:"半山客兼具客家的坚韧、潮汕的务实、华侨的开拓，这种复合性格是族群的核心优势，对大学生塑造多元人格、综合素养有何启发？", reference:"兼容不同优秀特质，不局限单一标签，培养开放、坚韧、务实的综合品格。" },
+    { id:47, question:"很多半山客华侨白手起家、艰苦创业，最终反哺家乡，这种艰苦奋斗、回馈社会的精神，在当下“躺平”思潮中，有什么警示与激励？", reference:"奋斗是青春最亮丽的底色，拒绝躺平，以实干创造价值，以感恩回馈社会。" },
+    { id:48, question:"半山客华侨文化是本土文化与海外文化交融的成果，这一现象让你对文明交流互鉴有什么新的理解？", reference:"文明因交流而多彩，因互鉴而丰富，不同文明碰撞融合，才能推动人类文明进步。" },
+    { id:49, question:"作为大学生，你会如何挖掘半山客华侨的历史故事与精神，讲好属于粤东、属于中国的侨乡文化故事？", reference:"深入田野调研、整理侨史资料、用新媒体创作，让华侨精神被更多青年知晓与传承。" },
+    { id:50, question:"半山客文化+华侨精神，是粤东珍贵的文化财富，你认为该如何让这份财富走进校园、走进青年，成为大学生的精神养分？", reference:"开设文化讲座、举办侨史展览、开展实践活动，让本土侨乡文化浸润青年心灵。" }
+  ];
+
+  // 随机抽取函数
+  function getRandomItem(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  // 全局当前题集
+  let currentChoice = null;
+  let currentJudge = null;
+  let currentSubjective = null;
+
+  // 用户答案
+  let userChoiceAnswer = null;
+  let userJudgeAnswer = null;
+  let userSubjectiveText = "";
+
+  // DOM 元素
+  const stepChoicePanel = document.getElementById('stepChoicePanel');
+  const stepJudgePanel = document.getElementById('stepJudgePanel');
+  const stepSubjectivePanel = document.getElementById('stepSubjectivePanel');
+  const resultPanel = document.getElementById('resultPanel');
+  const progressSteps = document.querySelectorAll('.step');
+
+  // 展示进度高亮
+  function setActiveStep(stepIndex) {
+    progressSteps.forEach((step, idx) => {
+      if (idx + 1 === stepIndex) {
+        step.classList.add('active');
+        step.classList.remove('step-done');
+      } else if (idx + 1 < stepIndex) {
+        step.classList.add('step-done');
+        step.classList.remove('active');
+      } else {
+        step.classList.remove('active', 'step-done');
+      }
+    });
+  }
+
+  // 随机抽取新的一组题目
+  function refreshQuestions() {
+    currentChoice = getRandomItem(SINGLE_CHOICE_POOL);
+    currentJudge = getRandomItem(JUDGE_POOL);
+    currentSubjective = getRandomItem(SUBJECTIVE_POOL);
+    // 重置答案
+    userChoiceAnswer = null;
+    userJudgeAnswer = null;
+    userSubjectiveText = "";
+  }
+
+  // 渲染选择题界面
+  function renderChoice() {
+    const q = currentChoice;
+    document.getElementById('choiceQuestionText').innerText = q.question;
+    const container = document.getElementById('choiceOptionsArea');
+    container.innerHTML = '';
+    q.options.forEach(opt => {
+      const optDiv = document.createElement('div');
+      optDiv.className = 'quiz-option';
+      optDiv.innerText = opt;
+      optDiv.addEventListener('click', () => {
+        // 移除同类选中样式
+        container.querySelectorAll('.quiz-option').forEach(el => el.classList.remove('selected'));
+        optDiv.classList.add('selected');
+        userChoiceAnswer = opt;
+        const nextBtn = document.getElementById('nextToJudgeBtn');
+        nextBtn.disabled = false;
+      });
+      container.appendChild(optDiv);
+    });
+    const nextBtn = document.getElementById('nextToJudgeBtn');
+    nextBtn.disabled = true;
+  }
+
+  // 渲染判断题
+  function renderJudge() {
+    document.getElementById('judgeQuestionText').innerText = currentJudge.question;
+    const judgeOpts = document.querySelectorAll('#judgeOptionsArea .judge-opt');
+    judgeOpts.forEach(opt => {
+      opt.classList.remove('selected');
+      opt.onclick = () => {
+        judgeOpts.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        userJudgeAnswer = opt.getAttribute('data-value');
+        const judgeNextBtn = document.getElementById('nextToSubjectiveBtn');
+        judgeNextBtn.disabled = false;
+      };
+    });
+    const judgeNextBtn = document.getElementById('nextToSubjectiveBtn');
+    judgeNextBtn.disabled = true;
+  }
+
+  // 渲染主观题
+  function renderSubjective() {
+    document.getElementById('subjectiveQuestionText').innerText = currentSubjective.question;
+    const textarea = document.getElementById('subjectiveAnswer');
+    textarea.value = '';
+    textarea.placeholder = '写下你的思考…… 侨乡文化，青年担当 ✨';
+  }
+
+  // 展示结果（只计分选择和判断，主观不计分但展示启发）
+  function showFinalResult() {
+    const choiceCorrect = (userChoiceAnswer === currentChoice.answer);
+    const judgeCorrect = (userJudgeAnswer === currentJudge.answer);
+    let score = (choiceCorrect ? 1 : 0) + (judgeCorrect ? 1 : 0);
+    const userSub = document.getElementById('subjectiveAnswer').value.trim();
+    userSubjectiveText = userSub || "（暂未填写，但思考已予敬意）";
+
+    // 展示得分
+    document.getElementById('finalScoreSpan').innerHTML = `📖 ${score} / 2`;
+    const detailsDiv = document.getElementById('resultDetails');
+    detailsDiv.innerHTML = `
+      <div class="feedback-item ${choiceCorrect ? 'correct-feedback' : 'wrong-feedback'}">
+        <strong>🥢 选择题</strong><br>${currentChoice.question}<br>
+        <span>你的回答：${userChoiceAnswer}</span> ${choiceCorrect ? '✓ 正确' : '✗ 错误'}<br>
+        ${!choiceCorrect ? `<span style="color:#b45a3b;">正确答案：${currentChoice.answer}</span>` : ''}
+      </div>
+      <div class="feedback-item ${judgeCorrect ? 'correct-feedback' : 'wrong-feedback'}">
+        <strong>⚖️ 判断题</strong><br>${currentJudge.question}<br>
+        你的判断：${userJudgeAnswer} ${judgeCorrect ? '✓ 正确' : '✗ 错误'}<br>
+        ${!judgeCorrect ? `<span>正确答案：${currentJudge.answer}</span>` : ''}
+      </div>
+      <div class="feedback-item reflection">
+        <strong>✍️ 青年·主观申论</strong><br>
+        <div style="font-weight: 500; margin-bottom: 8px;">📜 主题：${currentSubjective.question}</div>
+        <div class="subjective-answer">🌱 你的分享：<br>${escapeHtml(userSubjectiveText)}</div>
+        <div style="background:#f0ecdf; border-radius: 20px; padding: 12px; margin-top: 12px;">
+          💡 文化回响 · 启发参考：<br> ${currentSubjective.reference}
+        </div>
+      </div>
+    `;
+  }
+
+  // 简单防XSS
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if(m === '&') return '&amp;';
+      if(m === '<') return '&lt;';
+      if(m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
+  }
+
+  // 重置整组并回到第一步
+  function resetAndNewSession() {
+    refreshQuestions();
+    renderChoice();
+    renderJudge();
+    renderSubjective();
+    // 切换面板显示
+    stepChoicePanel.classList.remove('hidden-step');
+    stepJudgePanel.classList.add('hidden-step');
+    stepSubjectivePanel.classList.add('hidden-step');
+    resultPanel.classList.add('hidden-step');
+    setActiveStep(1);
+    // 清理按钮禁用状态
+    document.getElementById('nextToJudgeBtn').disabled = true;
+    const judgeBtn = document.getElementById('nextToSubjectiveBtn');
+    if(judgeBtn) judgeBtn.disabled = true;
+    // 清理主观内容
+    const textarea = document.getElementById('subjectiveAnswer');
+    if(textarea) textarea.value = '';
+  }
+
+  // 导航方法
+  function goToJudge() {
+    if (!userChoiceAnswer) return;
+    stepChoicePanel.classList.add('hidden-step');
+    stepJudgePanel.classList.remove('hidden-step');
+    setActiveStep(2);
+  }
+
+  function goToSubjective() {
+    if (!userJudgeAnswer) return;
+    stepJudgePanel.classList.add('hidden-step');
+    stepSubjectivePanel.classList.remove('hidden-step');
+    setActiveStep(3);
+  }
+
+  function onSubmitAndResult() {
+    // 主观题不设验证（可以空），但收集内容后展示结果
+    showFinalResult();
+    stepSubjectivePanel.classList.add('hidden-step');
+    resultPanel.classList.remove('hidden-step');
+    setActiveStep(4); // 结果页无进度步长，但保留即可
+  }
+
+  // 绑定按钮事件
+  document.getElementById('nextToJudgeBtn').addEventListener('click', goToJudge);
+  document.getElementById('nextToSubjectiveBtn').addEventListener('click', goToSubjective);
+  document.getElementById('submitQuizBtn').addEventListener('click', onSubmitAndResult);
+  document.getElementById('retakeBtn').addEventListener('click', resetAndNewSession);
+
+  // 初始化首次运行
+  refreshQuestions();
+  renderChoice();
+  renderJudge();
+  renderSubjective();
+  setActiveStep(1);
+  // 确保初始隐藏其他面板
+  stepJudgePanel.classList.add('hidden-step');
+  stepSubjectivePanel.classList.add('hidden-step');
+  resultPanel.classList.add('hidden-step');
+  stepChoicePanel.classList.remove('hidden-step');
+</script>
+</body>
+</html>
