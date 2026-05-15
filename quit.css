@@ -8,7 +8,7 @@
 body {
   background: linear-gradient(145deg, #f3f7f0 0%, #eef3e9 100%);
   font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans', 'Roboto', 'Microsoft YaHei', sans-serif;
-  padding: 20px 16px 48px;
+  padding: 12px 12px 40px;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -20,36 +20,39 @@ body {
   width: 100%;
   margin: 0 auto;
   background: rgba(255, 255, 255, 0.96);
-  border-radius: 44px;
-  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.03);
+  border-radius: 32px;
+  box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   position: relative;
 }
 
+/* 冷却提示栏 - 移动端优化字号 */
 .cooldown-bar {
   background: #f39c12;
   color: #2c3e2b;
   text-align: center;
-  padding: 10px 16px;
+  padding: 12px 16px;
   font-size: 0.85rem;
   font-weight: 600;
   display: none;
   border-bottom: 1px solid #e67e22;
+  line-height: 1.3;
 }
 .cooldown-bar.show {
   display: block;
 }
 
+/* 头部区域 */
 .hero {
   background: #2f5e3c;
-  padding: 28px 24px 24px;
+  padding: 24px 20px 20px;
   color: white;
   text-align: center;
-  border-bottom-left-radius: 28px;
-  border-bottom-right-radius: 28px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
 }
 .hero h1 {
-  font-size: 1.9rem;
+  font-size: 1.7rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -59,50 +62,52 @@ body {
 }
 .hero h1 span {
   background: #f3b33d;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   padding: 4px 12px;
   border-radius: 40px;
   color: #2e4a2c;
   font-weight: 600;
 }
 .hero p {
-  font-size: 0.85rem;
-  margin-top: 10px;
+  font-size: 0.8rem;
+  margin-top: 8px;
   opacity: 0.85;
 }
 .badge-set {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-top: 14px;
+  gap: 10px;
+  margin-top: 12px;
   flex-wrap: wrap;
 }
 .pill {
   background: rgba(255,255,240,0.2);
   backdrop-filter: blur(4px);
-  padding: 4px 14px;
+  padding: 4px 12px;
   border-radius: 40px;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 500;
 }
 
+/* 主体内边距 */
 .quiz-body {
-  padding: 24px 24px 32px;
+  padding: 20px 20px 28px;
 }
 
+/* 进度条 - 移动端更紧凑 */
 .step-progress {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   background: #f0f3ef;
-  padding: 8px 12px;
-  border-radius: 60px;
+  padding: 6px 10px;
+  border-radius: 50px;
 }
 .step {
   flex: 1;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #8ba088;
   transition: all 0.2s;
@@ -119,42 +124,45 @@ body {
   height: 6px;
   background: #f3b33d;
   border-radius: 10px;
-  margin: 6px auto 0;
+  margin: 5px auto 0;
 }
 .step-done {
   color: #2f5e3c;
 }
 
+/* 题目卡片 */
 .question-card {
   background: #ffffff;
-  border-radius: 32px;
-  padding: 6px 0 8px;
+  border-radius: 28px;
+  padding: 4px 0 6px;
 }
 
+/* 题目文本 - 移动端舒适字号 */
 .question-text {
-  font-size: 1.32rem;
+  font-size: 1.2rem;
   font-weight: 650;
-  line-height: 1.45;
-  margin-bottom: 24px;
-  padding: 20px 22px;
+  line-height: 1.4;
+  margin-bottom: 22px;
+  padding: 16px 18px;
   background: #FDF9F0;
-  border-radius: 28px;
+  border-radius: 24px;
   color: #1F3B2C;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
   border-left: 5px solid #f3b33d;
 }
 
+/* 选项区域 */
 .options-area {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 .quiz-option {
   background: #ffffff;
   border: 1.8px solid #DDE4D6;
   border-radius: 60px;
-  padding: 14px 22px;
+  padding: 14px 20px;   /* 加大垂直区域，手指易点 */
   font-size: 1rem;
   font-weight: 520;
   cursor: pointer;
@@ -163,17 +171,17 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-height: 54px;     /* 保证点击区域高度 */
 }
-.quiz-option:hover {
-  background: #F6FBF3;
-  border-color: #b9cfaa;
-  transform: translateX(3px);
+.quiz-option:active {
+  transform: scale(0.98);
+  background: #eef2ea;
 }
 .quiz-option.selected {
   background: #2f5e3c;
   border-color: #2f5e3c;
   color: white;
-  box-shadow: 0 6px 12px rgba(47,94,60,0.28);
+  box-shadow: 0 4px 10px rgba(47,94,60,0.25);
   font-weight: 600;
 }
 .multi-hint {
@@ -182,16 +190,17 @@ body {
   padding: 6px 14px;
   font-size: 0.7rem;
   display: inline-block;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   color: #2f5e3c;
   font-weight: 600;
 }
 
+/* 判断题选项 */
 .judge-group {
   display: flex;
-  gap: 18px;
+  gap: 14px;
   justify-content: center;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 .judge-opt {
   flex: 1;
@@ -199,19 +208,29 @@ body {
   background: #ffffff;
   border: 1.8px solid #DDE4D6;
   border-radius: 60px;
-  padding: 14px 8px;
+  padding: 14px 6px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   color: #2C4A35;
+  font-size: 1rem;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.judge-opt:active {
+  transform: scale(0.98);
 }
 .judge-opt.selected {
   background: #2f5e3c;
   border-color: #2f5e3c;
   color: white;
-  box-shadow: 0 6px 12px rgba(47,94,60,0.25);
+  box-shadow: 0 4px 10px rgba(47,94,60,0.2);
 }
 
+/* 文本域 - 移动端优化 */
 textarea {
   width: 100%;
   border-radius: 28px;
@@ -222,6 +241,7 @@ textarea {
   background: #FFFFFF;
   resize: vertical;
   margin-bottom: 24px;
+  line-height: 1.4;
 }
 textarea:focus {
   outline: none;
@@ -229,17 +249,19 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(243,179,61,0.2);
 }
 
+/* 按钮 - 移动端加大触控区 */
 button {
   width: 100%;
   background: #2f5e3c;
   border: none;
-  padding: 15px 20px;
+  padding: 16px 20px;
   border-radius: 60px;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: white;
   cursor: pointer;
   transition: all 0.2s;
+  min-height: 56px;
 }
 button:active {
   transform: scale(0.97);
@@ -260,10 +282,11 @@ button:disabled {
   color: #a79c7a;
 }
 
+/* 结果区域 */
 .result-box {
   background: #fefcf5;
-  border-radius: 32px;
-  padding: 20px;
+  border-radius: 28px;
+  padding: 18px;
   margin-top: 8px;
 }
 .score-circle {
@@ -271,20 +294,22 @@ button:disabled {
   margin-bottom: 20px;
 }
 .score-number {
-  font-size: 2.6rem;
+  font-size: 2.2rem;
   font-weight: 800;
   color: #2f5e3c;
   background: #eef4e9;
   display: inline-block;
-  padding: 8px 32px;
-  border-radius: 80px;
+  padding: 8px 28px;
+  border-radius: 60px;
 }
+
+/* 反馈卡片 - 移动端内边距调整 */
 .feedback-item {
-  padding: 18px 20px;
-  border-radius: 28px;
-  margin-bottom: 20px;
+  padding: 16px 16px;
+  border-radius: 24px;
+  margin-bottom: 18px;
   background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 .correct-feedback {
   background: #f0f9f0;
@@ -299,37 +324,42 @@ button:disabled {
   border-left: 6px solid #f3b33d;
 }
 
+/* 答案对比样式 (移动端换行友好) */
 .answer-compare {
   background: #f8f9fa;
   border-radius: 20px;
-  padding: 12px 16px;
+  padding: 12px 14px;
   margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 .user-answer {
   background: #e3f2fd;
-  padding: 8px 14px;
+  padding: 6px 14px;
   border-radius: 40px;
-  display: inline-block;
   font-weight: 600;
   color: #0056b3;
-  margin-right: 12px;
-  margin-bottom: 8px;
+  display: inline-block;
+  font-size: 0.9rem;
 }
 .correct-answer {
   background: #fff3e0;
-  padding: 8px 14px;
+  padding: 6px 14px;
   border-radius: 40px;
-  display: inline-block;
   font-weight: 600;
   color: #c45a1a;
+  display: inline-block;
+  font-size: 0.9rem;
 }
 .result-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   font-weight: 700;
-  font-size: 0.9rem;
-  margin-left: 8px;
+  font-size: 0.85rem;
+  margin-left: 0;
 }
 .result-badge.correct {
   color: #2c8c5a;
@@ -346,32 +376,25 @@ button:disabled {
   gap: 8px;
   flex-wrap: wrap;
 }
+
+/* 主观题用户回答与参考启发颜色区分 */
 .subjective-answer {
-  background: #fef9e6;
+  background: #e6f4ea;   /* 柔和绿色背景 */
   margin-top: 12px;
   border-radius: 20px;
   padding: 12px 16px;
+  color: #1a5c3a;        /* 深绿色文字 */
+  font-weight: 500;
+  line-height: 1.4;
 }
-/* 主观题用户回答文字颜色加深 */
-.subjective-user-text {
-  color: #1e4a2f;
-  font-weight: 600;
-  font-size: 1rem;
-  line-height: 1.5;
-  background: #fff3cf;
-  padding: 10px 14px;
+.reflection div:last-child {
+  color: #6b705c;
+  background: #f0ecdf;
   border-radius: 20px;
-  margin-top: 8px;
-}
-/* 参考启发文字颜色较淡 */
-.ref-hint {
-  color: #7f8c6d;
-  font-size: 0.9rem;
-  background: #fef9e6;
   padding: 12px;
-  border-radius: 20px;
   margin-top: 12px;
-  border-left: 3px solid #f3b33d;
+  font-style: normal;
+  font-size: 0.9rem;
 }
 
 .hidden-step {
@@ -379,15 +402,53 @@ button:disabled {
 }
 footer {
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: #9bb893;
   margin-top: 20px;
+  padding-bottom: 6px;
 }
 
+/* 冷却时禁用交互 */
 .cooldown-active .quiz-option,
 .cooldown-active .judge-opt,
 .cooldown-active textarea,
 .cooldown-active button:not(.cooldown-ignore) {
   pointer-events: none;
   opacity: 0.65;
+}
+
+/* 小屏幕（宽度 ≤ 480px）进一步优化 */
+@media (max-width: 480px) {
+  body {
+    padding: 8px 10px 32px;
+  }
+  .quiz-body {
+    padding: 16px 16px 24px;
+  }
+  .question-text {
+    font-size: 1.1rem;
+    padding: 14px 16px;
+  }
+  .quiz-option, .judge-opt {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+  button {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+  .step {
+    font-size: 0.65rem;
+  }
+  .score-number {
+    font-size: 1.8rem;
+    padding: 6px 20px;
+  }
+  .user-answer, .correct-answer {
+    font-size: 0.85rem;
+    padding: 4px 12px;
+  }
 }
